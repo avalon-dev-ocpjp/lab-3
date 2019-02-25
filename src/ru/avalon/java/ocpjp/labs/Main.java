@@ -1,6 +1,7 @@
 package ru.avalon.java.ocpjp.labs;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
@@ -8,23 +9,15 @@ import java.util.Properties;
 /**
  * Лабораторная работа №3
  * <p>
- * Курс: "DEV-OCPJP. Подготовка к сдаче сертификационных экзаменов серии Oracle Certified Professional Java Programmer"
- * <p>
- * Тема: "JDBC - Java Database Connectivity" 
- *
- * @author Daniel Alpatov <danial.alpatov@gmail.com>
+ * Тема: "JDBC - Java Database Connectivity"
  */
 public class Main {
-
     /**
      * Точка входа в приложение
-     * 
-     * @param args the command line arguments
+     *
+     * @param args
      */
-    public static void main(String[] args) throws SQLException {
-        /*
-         * TODO #01 Подключите к проекту все библиотеки, необходимые для соединения с СУБД.
-         */
+    public static void main(String[] args) {
         try (Connection connection = getConnection()) {
             ProductCode code = new ProductCode("MO", 'N', "Movies");
             code.save(connection);
@@ -33,57 +26,51 @@ public class Main {
             code.setCode("MV");
             code.save(connection);
             printAllCodes(connection);
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
         }
-        /*
-         * TODO #14 Средствами отладчика проверьте корректность работы программы
-         */
     }
+
     /**
      * Выводит в кодсоль все коды товаров
-     * 
+     *
      * @param connection действительное соединение с базой данных
-     * @throws SQLException 
-     */    
+     * @throws SQLException
+     */
     private static void printAllCodes(Connection connection) throws SQLException {
         Collection<ProductCode> codes = ProductCode.all(connection);
-        for (ProductCode code : codes) {
-            System.out.println(code);
-        }
+        codes.forEach(System.out::println);
     }
+
     /**
      * Возвращает URL, описывающий месторасположение базы данных
-     * 
+     *
      * @return URL в виде объекта класса {@link String}
      */
     private static String getUrl() {
-        /*
-         * TODO #02 Реализуйте метод getUrl
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        return "jdbc:mysql://localhost:3306/sample";
     }
+
     /**
      * Возвращает параметры соединения
-     * 
-     * @return Объект класса {@link Properties}, содержащий параметры user и 
+     *
+     * @return Объект класса {@link Properties}, содержащий параметры user и
      * password
      */
     private static Properties getProperties() {
-        /*
-         * TODO #03 Реализуйте метод getProperties
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        Properties params = new Properties();
+        params.setProperty("user", "root");
+        params.setProperty("password", "root");
+        return params;
     }
+
     /**
-     * Возвращает соединение с базой данных Sample
-     * 
+     * Возвращает соединение с базой данных sample
+     *
      * @return объект типа {@link Connection}
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static Connection getConnection() throws SQLException {
-        /*
-         * TODO #04 Реализуйте метод getConnection
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        return DriverManager.getConnection(getUrl(), getProperties());
     }
-    
 }
