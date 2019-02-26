@@ -3,6 +3,7 @@ package ru.avalon.java.ocpjp.labs;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -63,10 +64,8 @@ public class Main {
          * TODO #02 Реализуйте метод getUrl
          */
 //        throw new UnsupportedOperationException("Not implemented yet!");
-//        return "jdbc:derby://localhost:1527/data";
-        return "jdbc:derby://"
-                + getProperties().getProperty("host") + ":"
-                + getProperties().getProperty("port") + "/"
+//        return "jdbc:derby://localhost:1527/sample";
+        return "jdbc:derby://localhost:1527/"
                 + getProperties().getProperty("dbName");
     }
     /**
@@ -81,7 +80,7 @@ public class Main {
          */
 //        throw new UnsupportedOperationException("Not implemented yet!");
         Properties properties = new Properties();
-        try(FileInputStream in = new FileInputStream("prorerties.txt")){
+        try(FileInputStream in = new FileInputStream("properties.txt")){
             properties.load(in);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
