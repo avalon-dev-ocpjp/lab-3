@@ -1,6 +1,12 @@
 package ru.avalon.java.ocpjp.labs;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
@@ -15,28 +21,22 @@ import java.util.Properties;
  * @author Daniel Alpatov <danial.alpatov@gmail.com>
  */
 public class Main {
-
+    
     /**
      * Точка входа в приложение
      * 
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException {
-        /*
-         * TODO #01 Подключите к проекту все библиотеки, необходимые для соединения с СУБД.
-         */
         try (Connection connection = getConnection()) {
             ProductCode code = new ProductCode("MO", 'N', "Movies");
             code.save(connection);
             printAllCodes(connection);
-
+            
             code.setCode("MV");
             code.save(connection);
             printAllCodes(connection);
         }
-        /*
-         * TODO #14 Средствами отладчика проверьте корректность работы программы
-         */
     }
     /**
      * Выводит в кодсоль все коды товаров
@@ -56,10 +56,7 @@ public class Main {
      * @return URL в виде объекта класса {@link String}
      */
     private static String getUrl() {
-        /*
-         * TODO #02 Реализуйте метод getUrl
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        return "jdbc:derby://localhost:1527/sample";
     }
     /**
      * Возвращает параметры соединения
@@ -68,10 +65,14 @@ public class Main {
      * password
      */
     private static Properties getProperties() {
-        /*
-         * TODO #03 Реализуйте метод getProperties
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        URL url = ClassLoader.getSystemResource("resources/config.cfg");
+        Properties prop = new Properties();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(url.getPath())))) {            
+            prop.load(in);            
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return prop;
     }
     /**
      * Возвращает соединение с базой данных Sample
@@ -80,10 +81,7 @@ public class Main {
      * @throws SQLException 
      */
     private static Connection getConnection() throws SQLException {
-        /*
-         * TODO #04 Реализуйте метод getConnection
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
-    }
+        return DriverManager.getConnection(getUrl(), getProperties());
+    }   
     
 }
