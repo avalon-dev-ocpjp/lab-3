@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Класс описывает представление о коде товара и отражает соответствующую 
@@ -43,11 +44,16 @@ public class ProductCode {
      * @param set {@link ResultSet}, полученный в результате запроса, 
      * содержащего все поля таблицы PRODUCT_CODE базы данных Sample.
      */
-    private ProductCode(ResultSet set) {
+    private ProductCode(ResultSet set) throws SQLException {
         /*
          * TODO #05 реализуйте конструктор класса ProductCode
          */
-        throw new UnsupportedOperationException("Not implemented yet!");        
+//        throw new UnsupportedOperationException("Not implemented yet!");
+        if(set.next()){
+            this.code = set.getString("code");
+            this.discountCode = set.getString("discount").charAt(0);
+            this.description = set.getString("description");
+        }
     }
     /**
      * Возвращает код товара
@@ -108,7 +114,8 @@ public class ProductCode {
         /*
          * TODO #06 Реализуйте метод hashCode
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+//        throw new UnsupportedOperationException("Not implemented yet!");
+        return Objects.hashCode(this.code);
     }
     /**
      * Сравнивает некоторый произвольный объект с текущим объектом типа 
@@ -123,7 +130,16 @@ public class ProductCode {
         /*
          * TODO #07 Реализуйте метод equals
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+//        throw new UnsupportedOperationException("Not implemented yet!");
+        if (obj == null) return false;
+        if (obj == this) return true;
+//        if (obj instanceof ProductCode){
+//            if(((ProductCode) obj).getCode().equals(code)){
+//                return true;
+//            }
+//        }
+//        return false;  
+        return (obj instanceof ProductCode && ((ProductCode) obj).getCode().equals(code));
     }
     /**
      * Возвращает строковое представление кода товара.
