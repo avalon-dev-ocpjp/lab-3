@@ -107,7 +107,7 @@ public class ProductCode {
     @Override
     public int hashCode() {
         StringBuilder sb = new StringBuilder();
-        sb  .append(code)
+        sb  
             .append(discountCode)
             .append(description);
         return sb.toString().hashCode();
@@ -126,8 +126,7 @@ public class ProductCode {
         Objects.requireNonNull(obj, "Object must be not null!");
         if (obj instanceof ProductCode) {
             ProductCode other = (ProductCode) obj;
-            return this.code.equals(other.code) 
-                    && this.description.equals(other.description);
+            return this.hashCode() == other.hashCode();
         }
         return false;
     }
@@ -177,7 +176,7 @@ public class ProductCode {
      * @return Запрос в виде объекта класса {@link PreparedStatement}
      */
     public static PreparedStatement getUpdateQuery(Connection connection) throws SQLException {
-        return connection.prepareStatement("UPDATE PRODUCT_CODE SET ? = ? WHERE ? = ?");
+        return connection.prepareStatement("UPDATE PRODUCT_CODE SET PROD_CODE = ? WHERE DESCRIPTION = ?");
     }
     /**
      * Преобразует {@link ResultSet} в коллекцию объектов типа {@link ProductCode}
@@ -212,10 +211,8 @@ public class ProductCode {
             if (this.equals(product)) {
                 count++;
                 ps = getUpdateQuery(connection);
-                ps.setString(1, "DISCOUNT_CODE");
-                ps.setString(2, String.valueOf(this.getDiscountCode()));
-                ps.setString(3, "PROD_CODE");
-                ps.setString(4, this.getCode());
+                ps.setString(1, this.getCode());
+                ps.setString(2, product.getDescription());
                 ps.executeUpdate();
             }
         }
