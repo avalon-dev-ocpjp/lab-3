@@ -115,7 +115,10 @@ public class ProductCode {
          * TODO #06 Реализуйте метод hashCode
          */
 //        throw new UnsupportedOperationException("Not implemented yet!");
-        return Objects.hashCode(this.code);
+//        return Objects.hashCode(this.code);
+        int hash = 11;
+        hash = 31 * hash + Objects.hashCode(this.code);
+        return hash;
     }
     /**
      * Сравнивает некоторый произвольный объект с текущим объектом типа 
