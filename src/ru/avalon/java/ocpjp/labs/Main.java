@@ -1,6 +1,10 @@
 package ru.avalon.java.ocpjp.labs;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
@@ -15,7 +19,6 @@ import java.util.Properties;
  * @author Daniel Alpatov <danial.alpatov@gmail.com>
  */
 public class Main {
-
     /**
      * Точка входа в приложение
      * 
@@ -25,7 +28,7 @@ public class Main {
         /*
          * TODO #01 Подключите к проекту все библиотеки, необходимые для соединения с СУБД.
          */
-        try (Connection connection = getConnection()) {
+        try (Connection connection = DriverManager.getConnection(getProperties().getProperty("url"))) {
             ProductCode code = new ProductCode("MO", 'N', "Movies");
             code.save(connection);
             printAllCodes(connection);
@@ -59,7 +62,7 @@ public class Main {
         /*
          * TODO #02 Реализуйте метод getUrl
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        return getProperties().getProperty("url");
     }
     /**
      * Возвращает параметры соединения
@@ -68,11 +71,19 @@ public class Main {
      * password
      */
     private static Properties getProperties() {
+        Properties prop = new Properties();
         /*
          * TODO #03 Реализуйте метод getProperties
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+         */   
+        try {
+        String file =  "/samples/conf.cfg";
+        prop.load(new FileInputStream(new File(file)));
+        } catch (IOException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+        return prop;
     }
+
     /**
      * Возвращает соединение с базой данных Sample
      * 
@@ -83,7 +94,10 @@ public class Main {
         /*
          * TODO #04 Реализуйте метод getConnection
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        String url = getUrl();
+        String user = getProperties().getProperty("user");
+        String password = getProperties().getProperty("password");
+        return DriverManager.getConnection(url, user, password);
     }
     
 }
