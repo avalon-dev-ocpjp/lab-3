@@ -1,9 +1,19 @@
 package ru.avalon.java.ocpjp.labs;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Лабораторная работа №3
@@ -15,7 +25,9 @@ import java.util.Properties;
  * @author Daniel Alpatov <danial.alpatov@gmail.com>
  */
 public class Main {
-
+    
+    
+    
     /**
      * Точка входа в приложение
      * 
@@ -25,6 +37,9 @@ public class Main {
         /*
          * TODO #01 Подключите к проекту все библиотеки, необходимые для соединения с СУБД.
          */
+
+
+
         try (Connection connection = getConnection()) {
             ProductCode code = new ProductCode("MO", 'N', "Movies");
             code.save(connection);
@@ -59,7 +74,7 @@ public class Main {
         /*
          * TODO #02 Реализуйте метод getUrl
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        return "jdbc:derby://localhost:1527/sample";
     }
     /**
      * Возвращает параметры соединения
@@ -68,10 +83,19 @@ public class Main {
      * password
      */
     private static Properties getProperties() {
-        /*
-         * TODO #03 Реализуйте метод getProperties
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+        Properties prop = new Properties();
+        URL url = ClassLoader.getSystemResource("resources/Config.txt");
+        System.out.println(url);
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(url.getPath())));
+            prop.load(in);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return prop;
     }
     /**
      * Возвращает соединение с базой данных Sample
@@ -80,10 +104,8 @@ public class Main {
      * @throws SQLException 
      */
     private static Connection getConnection() throws SQLException {
-        /*
-         * TODO #04 Реализуйте метод getConnection
-         */
-        throw new UnsupportedOperationException("Not implemented yet!");
+
+    return DriverManager.getConnection(getUrl(),getProperties());
     }
     
 }
