@@ -190,7 +190,7 @@ public class ProductCode {
      */
     public static PreparedStatement getUpdateQuery(Connection connection) throws SQLException {
 
-        return connection.prepareStatement("UPDATE PRODUCT_CODE SET ? = ? WHERE ? = ?");
+        return connection.prepareStatement("UPDATE PRODUCT_CODE SET DISCOUNT_CODE = ? WHERE PROD_CODE = ?");
     }
 
     /**
@@ -224,24 +224,33 @@ public class ProductCode {
     public void save(Connection connection) throws SQLException {
         PreparedStatement ps = getSelectQuery(connection);
         ResultSet rs = ps.executeQuery();
-        boolean existFlag = false;
-        while (rs.next()) {
-            existFlag = this.equals(rs);
-            if (existFlag) {
-                ps = getUpdateQuery(connection);
-                ps.setString(1, getCode());
-                ps.setString(2, String.valueOf(getDiscountCode()));
-                ps.setString(3, getDescription());
-            } else {
-                ps = getInsertQuery(connection);
-                ps.setString(1, getCode());
-                ps.setString(2, String.valueOf(getDiscountCode()));
-                ps.setString(3, getDescription());
+        boolean exists = false;
+        for (ProductCode prod : convert(rs)) {
+            if (this.equals(prod)) {
+                exists = true;
             }
-            
         }
-        ps.execute();
-        
+        System.out.println("Here " + exists);
+        if (exists) {
+
+            ps = getUpdateQuery(connection);
+            ps.setString(1, String.valueOf(getDiscountCode()));
+             ps.setString(2, getCode());
+            ps.execute();
+
+
+        } else {
+            ps = getInsertQuery(connection);
+            ps.setString(1, getCode());
+            ps.setString(2, String.valueOf(getDiscountCode()));
+            ps.setString(3, getDescription());
+            ps.execute();
+        }
+
+        ps.close();
+        rs.close();
+        ps = null;
+        rs = null;
     }
 
     /**

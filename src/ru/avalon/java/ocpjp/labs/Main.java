@@ -48,6 +48,7 @@ public class Main {
             code.setCode("MV");
             code.save(connection);
             printAllCodes(connection);
+           
         }
         /*
          * TODO #14 Средствами отладчика проверьте корректность работы программы
