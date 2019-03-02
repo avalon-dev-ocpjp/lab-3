@@ -148,14 +148,8 @@ public class ProductCode {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb  .append("code: ")
-                .append(code)
-                .append(", discount code: ")
-                .append(discountCode)
-                .append(", description: ")
-                .append(description);
-        return sb.toString();
+        return "code: " + code + ", discount code: " + discountCode +
+                ", description: " + description;
     }
 
     /**
